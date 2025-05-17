@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard - Robots y Misiones</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard: Robots y sus Misiones</h1>
+    
+    <!-- Sección de Robots -->
+    <h2>Robots</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Modelo</th>
+                <th>Tipo</th>
+                <th>Energía (Actual/Máxima)</th>
+                <th>Nivel</th>
+                <th>Habilidades</th>
+                <th>Estado</th>
+                <th>Misiones Realizadas (ID)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="robot : ${robots}">
+                <td th:text="${robot.id}"></td>
+                <td th:text="${robot.nombre}"></td>
+                <td th:text="${robot.modelo}"></td>
+                <td th:text="${robot.tipo}"></td>
+                <td>
+                    <span th:text="${robot.energiaActual}"></span>
+                    /
+                    <span th:text="${robot.energiaMaxima}"></span>
+                </td>
+                <td th:text="${robot.nivel}"></td>
+                <td th:text="${robot.habilidades}"></td>
+                <td th:text="${robot.estado}"></td>
+                <td>
+                    <ul>
+                        <li th:each="misionId : ${robot.misionesRealizadas}" th:text="${misionId}"></li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Sección de Misiones -->
+    <h2>Misiones</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Dificultad</th>
+                <th>Recompensa</th>
+                <th>Robots Participantes (ID)</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="mision : ${misiones}">
+                <td th:text="${mision.id}"></td>
+                <td th:text="${mision.nombre}"></td>
+                <td th:text="${mision.descripcion}"></td>
+                <td th:text="${mision.dificultad}"></td>
+                <td th:text="${mision.recompensa}"></td>
+                <td>
+                    <ul>
+                        <li th:each="robotId : ${mision.robotsParticipantes}" th:text="${robotId}"></li>
+                    </ul>
+                </td>
+                <td th:text="${mision.fechaInicio}"></td>
+                <td th:text="${mision.fechaFin}"></td>
+                <td th:text="${mision.resultado}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
