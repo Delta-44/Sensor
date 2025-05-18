@@ -1,42 +1,177 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista de Misiones</title>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <title>Misiones - Gestión</title>
 </head>
+<style>
+  /* Estilos generales del body */
+  body {
+    background-color: #000;
+    color: #f1f1f1;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  /* Encabezados con acento rojo */
+  h1, h2 {
+    color: #ff4d4d;
+    margin-bottom: 10px;
+  }
+
+  /* Estilos para formularios y inputs */
+  form {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ff4d4d;
+    border-radius: 5px;
+    background-color: #121212;
+  }
+
+  input, select, textarea, button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #ff4d4d;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Botones con estilo destacado */
+  button {
+    background-color: #b30000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ff4d4d;
+  }
+  
+  /* Estilos para tablas */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table, th, td {
+    border: 1px solid #ff4d4d;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #1a1a1a;
+    color: #ff4d4d;
+  }
+  
+  /* Alterna colores en las filas para mayor legibilidad */
+  tr:nth-child(even) {
+    background-color: #1a1a1a;
+  }
+  
+  tr:nth-child(odd) {
+    background-color: #000;
+  }
+  
+  /* Enlaces con detalle en rojo */
+  a {
+    color: #ff6666;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+
 <body>
-    <h1>Lista de Misiones</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Dificultad</th>
-                <th>Recompensa</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>Resultado</th>
-                <th>Robots Participantes</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="mision : ${misiones}">
-                <td th:text="${mision.id}"></td>
-                <td th:text="${mision.nombre}"></td>
-                <td th:text="${mision.descripcion}"></td>
-                <td th:text="${mision.dificultad}"></td>
-                <td th:text="${mision.recompensa}"></td>
-                <td th:text="${mision.fechaInicio}"></td>
-                <td th:text="${mision.fechaFin}"></td>
-                <td th:text="${mision.resultado}"></td>
-                <td>
-                    <ul>
-                        <li th:each="robot : ${mision.robotsParticipantes}" th:text="${robot.nombre}"></li>
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <h1>Gestión de Misiones</h1>
+
+  <!-- Formulario para crear una nueva misión -->
+  <h2>Añadir Nueva Misión</h2>
+  <form th:action="@{/misiones}" method="post">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required/><br/>
+
+    <label>Descripción:</label>
+    <textarea name="descripcion" required></textarea><br/>
+
+    <label>Dificultad:</label>
+    <select name="dificultad">
+      <option value="baja">Baja</option>
+      <option value="media">Media</option>
+      <option value="alta">Alta</option>
+    </select><br/>
+
+    <label>Recompensa:</label>
+    <input type="number" name="recompensa" required/><br/>
+
+    <label>Fecha Inicio:</label>
+    <input type="date" name="fechaInicio" required/><br/>
+
+    <label>Fecha Fin:</label>
+    <input type="date" name="fechaFin" required/><br/>
+
+    <!-- El campo resultado lo dejamos opcional o lo establecemos por defecto en el controlador -->
+    <button type="submit">Crear Misión</button>
+  </form>
+
+  <hr/>
+
+  <!-- Lista de misiones -->
+  <h2>Lista de Misiones</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Dificultad</th>
+        <th>Recompensa</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
+        <th>Resultado</th>
+        <th>Robots Participantes</th>
+        <th>Asignar Robot</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="mision : ${misiones}">
+        <td th:text="${mision.id}"></td>
+        <td th:text="${mision.nombre}"></td>
+        <td th:text="${mision.descripcion}"></td>
+        <td th:text="${mision.dificultad}"></td>
+        <td th:text="${mision.recompensa}"></td>
+        <td th:text="${mision.fechaInicio}"></td>
+        <td th:text="${mision.fechaFin}"></td>
+        <td th:text="${mision.resultado}"></td>
+        <td>
+          <ul>
+            <li th:each="robot : ${mision.robotsParticipantes}" th:text="${robot.nombre}"></li>
+          </ul>
+        </td>
+        <td>
+          <!-- Formulario para asignar robot a la misión -->
+          <form th:action="@{'/misiones/' + ${mision.id} + '/asignar-robot'}" method="post">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <label>Robot:</label>
+            <select name="robotId">
+              <!-- Se asume que "robotsAll" contiene la lista de robots -->
+              <option th:each="robot : ${robotsAll}" th:value="${robot.id}" th:text="${robot.nombre}"></option>
+            </select>
+            <button type="submit">Asignar</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>

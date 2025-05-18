@@ -1,42 +1,185 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista de Robots</title>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <title>Robots - Gestión</title>
 </head>
+<style>
+  /* Estilos generales del body */
+  body {
+    background-color: #000;
+    color: #f1f1f1;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  /* Encabezados con acento rojo */
+  h1, h2 {
+    color: #ff4d4d;
+    margin-bottom: 10px;
+  }
+
+  /* Estilos para formularios y inputs */
+  form {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ff4d4d;
+    border-radius: 5px;
+    background-color: #121212;
+  }
+
+  input, select, textarea, button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #ff4d4d;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Botones con estilo destacado */
+  button {
+    background-color: #b30000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ff4d4d;
+  }
+  
+  /* Estilos para tablas */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table, th, td {
+    border: 1px solid #ff4d4d;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #1a1a1a;
+    color: #ff4d4d;
+  }
+  
+  /* Alterna colores en las filas para mayor legibilidad */
+  tr:nth-child(even) {
+    background-color: #1a1a1a;
+  }
+  
+  tr:nth-child(odd) {
+    background-color: #000;
+  }
+  
+  /* Enlaces con detalle en rojo */
+  a {
+    color: #ff6666;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+
 <body>
-    <h1>Lista de Robots</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Modelo</th>
-                <th>Tipo</th>
-                <th>Energía Actual</th>
-                <th>Energía Máxima</th>
-                <th>Nivel</th>
-                <th>Habilidades</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="robot : ${robots}">
-                <td th:text="${robot.id}"></td>
-                <td th:text="${robot.nombre}"></td>
-                <td th:text="${robot.modelo}"></td>
-                <td th:text="${robot.tipo}"></td>
-                <td th:text="${robot.energiaActual}"></td>
-                <td th:text="${robot.energiaMaxima}"></td>
-                <td th:text="${robot.nivel}"></td>
-                <td>
-                    <ul>
-                        <li th:each="hab : ${robot.habilidades}" th:text="${hab}"></li>
-                    </ul>
-                </td>
-                <td th:text="${robot.estado}"></td>
-            </tr>
-        </tbody>
-    </table>
+  <h1>Gestión de Robots</h1>
+
+  <!-- Formulario para crear un nuevo robot -->
+  <h2>Añadir Nuevo Robot</h2>
+  <form th:action="@{/robots}" method="post">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required/><br/>
+
+    <label>Modelo:</label>
+    <input type="text" name="modelo" required/><br/>
+
+    <label>Tipo:</label>
+    <input type="text" name="tipo" placeholder="ej. asalto, defensa, espionaje, médico" required/><br/>
+
+    <label>Energía Actual:</label>
+    <input type="number" step="0.1" name="energiaActual" required/><br/>
+
+    <label>Energía Máxima:</label>
+    <input type="number" step="0.1" name="energiaMaxima" required/><br/>
+
+    <label>Nivel:</label>
+    <input type="number" name="nivel" required/><br/>
+
+    <label>Habilidades:</label>
+    <!-- Se espera que el usuario ingrese habilidades separadas por coma -->
+    <input type="text" name="habilidades" placeholder="ej. camuflaje, ataque láser"/><br/>
+
+    <label>Estado:</label>
+    <select name="estado">
+      <option value="activo">Activo</option>
+      <option value="dañado">Dañado</option>
+      <option value="destruido">Destruido</option>
+    </select><br/>
+
+    <button type="submit">Crear Robot</button>
+  </form>
+
+  <hr/>
+
+  <!-- Lista de robots -->
+  <h2>Lista de Robots</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Modelo</th>
+        <th>Tipo</th>
+        <th>Energía Actual</th>
+        <th>Energía Máxima</th>
+        <th>Nivel</th>
+        <th>Habilidades</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="robot : ${robots}">
+        <td th:text="${robot.id}"></td>
+        <td th:text="${robot.nombre}"></td>
+        <td th:text="${robot.modelo}"></td>
+        <td th:text="${robot.tipo}"></td>
+        <td th:text="${robot.energiaActual}"></td>
+        <td th:text="${robot.energiaMaxima}"></td>
+        <td th:text="${robot.nivel}"></td>
+        <td>
+          <ul>
+            <li th:each="hab : ${robot.habilidades}" th:text="${hab}"></li>
+          </ul>
+        </td>
+        <td th:text="${robot.estado}"></td>
+        <td>
+          <!-- Formulario para recargar energía -->
+          <form th:action="@{'/robots/' + ${robot.id} + '/recargar'}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <button type="submit">Recargar</button>
+          </form>
+          <!-- Formulario para subir nivel -->
+          <form th:action="@{'/robots/' + ${robot.id} + '/subir-nivel'}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="PATCH"/>
+            <button type="submit">Subir Nivel</button>
+          </form>
+          <!-- Link para ver el historial de misiones -->
+          <a th:href="@{'/robots/' + ${robot.id} + '/misiones'}">Historial Misiones</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>

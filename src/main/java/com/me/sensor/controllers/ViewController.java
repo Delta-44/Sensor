@@ -23,8 +23,18 @@ public class ViewController {
     }
     
     @GetMapping("/view/misiones")
-    public String viewMisiones(Model model) {
-        model.addAttribute("misiones", misionRepository.findAll());
-        return "misiones"; // Se espera que exista un archivo misiones.html en resources/templates
-    }
+public String viewMisiones(Model model) {
+    model.addAttribute("misiones", misionRepository.findAll());
+    // Agregamos todos los robots para la asignación
+    model.addAttribute("robotsAll", automataRepository.findAll());
+    return "misiones";
+}
+@GetMapping({"/", "/dashboard"})
+public String dashboard(Model model) {
+    model.addAttribute("misiones", misionRepository.findAll());
+    model.addAttribute("robotsAll", automataRepository.findAll());
+    return "dashboard"; // Se buscará el archivo dashboard.html en resources/templates
+}
+
+
 }
