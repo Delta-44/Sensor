@@ -98,6 +98,7 @@
   <!-- Formulario para crear un nuevo robot -->
   <h2>Añadir Nuevo Robot</h2>
   <form th:action="@{/robots}" method="post">
+    <input type="hidden" name="_method" value="PATCH"/>
     <label>Nombre:</label>
     <input type="text" name="nombre" required/><br/>
 

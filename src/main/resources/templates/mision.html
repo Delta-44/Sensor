@@ -98,6 +98,7 @@
   <!-- Formulario para crear una nueva misión -->
   <h2>Añadir Nueva Misión</h2>
   <form th:action="@{/misiones}" method="post">
+    <input type="hidden" name="_method" value="PATCH"/>
     <label>Nombre:</label>
     <input type="text" name="nombre" required/><br/>
 
