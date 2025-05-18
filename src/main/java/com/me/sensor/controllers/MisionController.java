@@ -48,7 +48,7 @@ public class MisionController {
 
     // PATCH /misiones/{id}/asignar-robot → asignar un robot a la misión 
     // Este método se invoca desde un formulario que envía _method=PATCH.
-    @PatchMapping("/{id}/asignar-robot")
+    @PostMapping("/{id}/asignar-robot")
 @ResponseBody
 public ResponseEntity<?> asignarRobot(@PathVariable Long id, @ModelAttribute AsignarRobotDTO dto) {
     Optional<Mision> misionOpt = misionRepository.findById(id);

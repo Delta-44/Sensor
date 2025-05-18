@@ -110,7 +110,7 @@
           <td>
             <form th:action="@{'/misiones/' + ${mision.id} + '/asignar-robot'}" method="post">
               <!-- Campo oculto para usar el método PATCH -->
-              <input type="hidden" name="_method" value="PATCH"/>
+              <!-- <input type="hidden" name="_method" value="PATCH"/> -->
               <label>Robot:</label>
               <select name="robotId">
                 <option value="">- Seleccionar Robot -</option>
