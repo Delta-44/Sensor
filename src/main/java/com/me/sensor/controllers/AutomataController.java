@@ -1,7 +1,9 @@
 package com.me.sensor.controllers;
 
 import com.me.sensor.models.Automata;
+import com.me.sensor.models.Mision;
 import com.me.sensor.repositories.AutomataRepository;
+import com.me.sensor.repositories.MisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,53 +17,56 @@ public class AutomataController {
 
     @Autowired
     private AutomataRepository automataRepository;
+    
+    @Autowired
+    private MisionRepository misionRepository;
 
-    // POST /robots → Crear robot
+    // POST /robots → crear robot
     @PostMapping
-    public ResponseEntity<Automata> crearAutomata(@RequestBody Automata automata) {
-        Automata saved = automataRepository.save(automata);
-        return ResponseEntity.ok(saved);
+    public Automata createAutomata(@RequestBody Automata automata) {
+        return automataRepository.save(automata);
     }
 
-    // GET /robots → Listar todos los robots
+    // GET /robots → listar todos los robots
     @GetMapping
-    public List<Automata> obtenerTodos() {
+    public List<Automata> getAllAutomatas() {
         return automataRepository.findAll();
     }
 
-    // PATCH /robots/{id}/recargar → Restablecer energía al máximo
-    @PatchMapping("/{id}/recargar")
-    public ResponseEntity<String> recargarEnergia(@PathVariable("id") String id) {
-        Optional<Automata> optional = automataRepository.findById(id);
-        if (optional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    // GET /robots/{id}/misiones → mostrar historial de misiones del robot
+    @GetMapping("/{id}/misiones")
+    public ResponseEntity<?> getRobotMisiones(@PathVariable Long id) {
+        Optional<Automata> automataOpt = automataRepository.findById(id);
+        if(automataOpt.isPresent()){
+            Automata automata = automataOpt.get();
+            return ResponseEntity.ok(automata.getMisionesRealizadas());
         }
-        Automata automata = optional.get();
-        automata.setEnergiaActual(automata.getEnergiaMaxima());
-        automataRepository.save(automata);
-        return ResponseEntity.ok("Energía recargada al máximo");
-    }
-
-    // PATCH /robots/{id}/subir-nivel → Aumentar el nivel del robot
-    @PatchMapping("/{id}/subir-nivel")
-    public ResponseEntity<String> subirNivel(@PathVariable("id") String id) {
-        Optional<Automata> optional = automataRepository.findById(id);
-        if (optional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Automata automata = optional.get();
-        automata.setNivel(automata.getNivel() + 1);
-        automataRepository.save(automata);
-        return ResponseEntity.ok("Nivel incrementado");
+        return ResponseEntity.notFound().build();
     }
     
-    // Opcional: Mostrar historial de misiones de un robot
-    @GetMapping("/{id}/misiones")
-    public ResponseEntity<List<String>> historialMisiones(@PathVariable("id") String id) {
-        Optional<Automata> optional = automataRepository.findById(id);
-        if (optional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    // PATCH /robots/{id}/recargar → restablecer energía al máximo
+    @PatchMapping("/{id}/recargar")
+    public ResponseEntity<?> recargarRobot(@PathVariable Long id) {
+        Optional<Automata> automataOpt = automataRepository.findById(id);
+        if(automataOpt.isPresent()){
+            Automata automata = automataOpt.get();
+            automata.setEnergiaActual(automata.getEnergiaMaxima());
+            automataRepository.save(automata);
+            return ResponseEntity.ok(automata);
         }
-        return ResponseEntity.ok(optional.get().getMisionesRealizadas());
+        return ResponseEntity.notFound().build();
+    }
+
+    // PATCH /robots/{id}/subir-nivel → aumentar el nivel del robot
+    @PatchMapping("/{id}/subir-nivel")
+    public ResponseEntity<?> subirNivel(@PathVariable Long id) {
+        Optional<Automata> automataOpt = automataRepository.findById(id);
+        if(automataOpt.isPresent()){
+            Automata automata = automataOpt.get();
+            automata.setNivel(automata.getNivel() + 1);
+            automataRepository.save(automata);
+            return ResponseEntity.ok(automata);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

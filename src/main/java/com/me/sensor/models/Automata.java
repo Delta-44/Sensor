@@ -1,18 +1,37 @@
 package com.me.sensor.models;
 
-import lombok.Data;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@NoArgsConstructor
 @Data
 public class Automata {
-    private String id; // identificador único
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     private String nombre;
     private String modelo;
-    private String tipo; // asalto, defensa, espionaje, médico, etc.
-    private int energiaActual;
-    private int energiaMaxima;
-    private int nivel; // experiencia o evolución
-    private List<String> habilidades; // ej. "camuflaje", "ataque láser", "evisceracion", "bengala"
-    private String estado; // "activo", "dañado", o "destruido"
-    private List<String> misionesRealizadas; // lista de IDs de misiones completadas
+    private String tipo;
+    
+    private double energiaActual;
+    private double energiaMaxima;
+    
+    private int nivel;
+    
+    // Lista de habilidades (por ejemplo: "camuflaje", "ataque láser")
+    @ElementCollection
+    private List<String> habilidades;
+    
+    // Estado: "activo", "dañado", "destruido"
+    private String estado;
+    
+    // Relación many-to-many con la entidad Mision
+    @ManyToMany(mappedBy = "robotsParticipantes")
+    private Set<Mision> misionesRealizadas = new HashSet<>();
 }
