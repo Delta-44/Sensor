@@ -48,40 +48,34 @@ public class MisionController {
 
     // PATCH /misiones/{id}/asignar-robot → asignar un robot a la misión 
     // Se invoca desde un formulario que envía _method=PATCH.
-   @PatchMapping("/{id}/asignar-robot")
-@ResponseBody
-public ResponseEntity<?> asignarRobot(@PathVariable("id") Long id, @ModelAttribute AsignarRobotDTO dto) {
-    System.out.println("AsignarRobot endpoint invocado:");
-    System.out.println("  ID de Misión recibido: " + id);
-    System.out.println("  robotId recibido: " + dto.getRobotId());
-    
-    if(dto.getRobotId() == null) {
-        return ResponseEntity.badRequest().body("No se recibió el parámetro robotId.");
-    }
-    
-    Optional<Mision> misionOpt = misionRepository.findById(id);
-    if (misionOpt.isEmpty()) {
-        return ResponseEntity.notFound().build();
-    }
-    Mision mision = misionOpt.get();
+  @PatchMapping("/{misionId}/asignar-robot")
+    public String asignarRobot(
+            @PathVariable("misionId") Long misionId,
+            @RequestParam("robotId") Long robotId) {
 
-    Optional<Automata> automataOpt = automataRepository.findById(dto.getRobotId());
-    if (automataOpt.isEmpty()) {
-        return ResponseEntity.badRequest().body("Robot no encontrado con ID: " + dto.getRobotId());
+        Optional<Mision> optMision = misionRepository.findById(misionId);
+        if (optMision.isEmpty()) {
+            // Redirige con mensaje de error o de aviso si no se encontró la misión
+            return "redirect:/view/misiones?error=notFound";
+        }
+        Mision mision = optMision.get();
+
+        Optional<Automata> optAutomata = automataRepository.findById(robotId);
+        if (optAutomata.isEmpty()) {
+            // Redirige en caso de no encontrar el robot
+            return "redirect:/view/misiones?error=robotNotFound";
+        }
+        Automata robot = optAutomata.get();
+
+        // Actualiza la misión añadiendo el robot.
+        // (Aquí puedes incluir validaciones adicionales: por ejemplo, evitar duplicados)
+        mision.getRobotsParticipantes().add(robot);
+
+        misionRepository.save(mision);
+
+        // Redirige nuevamente a la vista de misiones o muestra un mensaje de éxito
+        return "redirect:/view/misiones";
     }
-    Automata robot = automataOpt.get();
-
-    if (!puedeParticipar(mision, robot)) {
-        return ResponseEntity.badRequest().body("El robot no cumple los requisitos para participar en esta misión (energía o nivel insuficiente).");
-    }
-
-    mision.getRobotsParticipantes().add(robot);
-    robot.getMisionesRealizadas().add(mision);
-
-    misionRepository.save(mision);
-    automataRepository.save(robot);
-    return ResponseEntity.ok(mision);
-}
 
     
     // Método auxiliar para la validez según la dificultad de la misión
@@ -99,14 +93,15 @@ public ResponseEntity<?> asignarRobot(@PathVariable("id") Long id, @ModelAttribu
     }
     
     // DTO para recibir el ID del robot (vía formulario)
-    public static class AsignarRobotDTO {
-        private Long robotId;
+public static class AsignarRobotDTO {
+    private Long robotId;
 
-        public Long getRobotId() {
-            return robotId;
-        }
-        public void setRobotId(Long robotId) {
-            this.robotId = robotId;
-        }
+    public Long getRobotId() {
+        return robotId;
     }
+    public void setRobotId(Long robotId) {
+        this.robotId = robotId;
+    }
+}
+
 }
