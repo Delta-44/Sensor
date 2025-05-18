@@ -47,36 +47,36 @@ public class MisionController {
     }
 
     // PATCH /misiones/{id}/asignar-robot → asignar un robot a la misión 
-    // Este método se invoca desde un formulario que envía _method=PATCH.
-    @PostMapping("/{id}/asignar-robot")
-@ResponseBody
-public ResponseEntity<?> asignarRobot(@PathVariable Long id, @ModelAttribute AsignarRobotDTO dto) {
-    Optional<Mision> misionOpt = misionRepository.findById(id);
-    if (misionOpt.isEmpty()) {
-        return ResponseEntity.notFound().build();
+    // Se invoca desde un formulario que envía _method=PATCH.
+    @PatchMapping("/{id}/asignar-robot")
+    @ResponseBody
+    public ResponseEntity<?> asignarRobot(@PathVariable("id") Long id, @ModelAttribute AsignarRobotDTO dto) {
+        Optional<Mision> misionOpt = misionRepository.findById(id);
+        if (misionOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Mision mision = misionOpt.get();
+
+        Optional<Automata> automataOpt = automataRepository.findById(dto.getRobotId());
+        if (automataOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Robot no encontrado con ID: " + dto.getRobotId());
+        }
+        Automata robot = automataOpt.get();
+
+        // Verificar que el robot cumpla los requisitos para la misión
+        if (!puedeParticipar(mision, robot)) {
+            return ResponseEntity.badRequest().body("El robot no cumple los requisitos para participar en esta misión (energía o nivel insuficiente).");
+        }
+
+        mision.getRobotsParticipantes().add(robot);
+        robot.getMisionesRealizadas().add(mision);
+
+        misionRepository.save(mision);
+        automataRepository.save(robot);
+        return ResponseEntity.ok(mision);
     }
-    Mision mision = misionOpt.get();
-
-    Optional<Automata> automataOpt = automataRepository.findById(dto.getRobotId());
-    if (automataOpt.isEmpty()) {
-        return ResponseEntity.badRequest().body("Robot no encontrado con ID: " + dto.getRobotId());
-    }
-    Automata robot = automataOpt.get();
-
-    if (!puedeParticipar(mision, robot)) {
-        return ResponseEntity.badRequest().body("El robot no cumple los requisitos para participar en esta misión (energía o nivel insuficiente).");
-    }
-
-    mision.getRobotsParticipantes().add(robot);
-    robot.getMisionesRealizadas().add(mision);
-
-    misionRepository.save(mision);
-    automataRepository.save(robot);
-    return ResponseEntity.ok(mision);
-}
-
     
-    // Método auxiliar para validación según dificultad
+    // Método auxiliar para la validez según la dificultad de la misión
     private boolean puedeParticipar(Mision mision, Automata robot) {
         String dificultad = mision.getDificultad().toLowerCase();
         switch (dificultad) {
@@ -85,6 +85,7 @@ public ResponseEntity<?> asignarRobot(@PathVariable Long id, @ModelAttribute Asi
             case "media":
                 return robot.getNivel() >= 2 && robot.getEnergiaActual() >= robot.getEnergiaMaxima() * 0.75;
             default:
+                // Para misión "baja" o cualquier otro valor
                 return robot.getNivel() >= 1 && robot.getEnergiaActual() >= robot.getEnergiaMaxima() * 0.5;
         }
     }

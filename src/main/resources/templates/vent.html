@@ -108,16 +108,17 @@
           <td th:text="${mision.id}"></td>
           <td th:text="${mision.nombre}"></td>
           <td>
-            <form th:action="@{'/misiones/' + ${mision.id} + '/asignar-robot'}" method="post">
-              <!-- Campo oculto para usar el método PATCH -->
-              <!-- <input type="hidden" name="_method" value="PATCH"/> -->
-              <label>Robot:</label>
-              <select name="robotId">
-                <option value="">- Seleccionar Robot -</option>
-                <option th:each="robot : ${robotsAll}" th:value="${robot.id}" th:text="${robot.nombre}"></option>
-              </select>
-              <button type="submit">Asignar</button>
-            </form>
+          <form th:action="@{'/misiones/' + ${mision.id} + '/asignar-robot'}" method="post">
+  <!-- Campo oculto para usar el método PATCH -->
+  <input type="hidden" name="_method" value="PATCH"/>
+  <label>Robot:</label>
+  <select name="robotId">
+    <option value="">- Seleccionar Robot -</option>
+    <option th:each="robot : ${robotsAll}" th:value="${robot.id}" th:text="${robot.nombre}"></option>
+  </select>
+  <button type="submit">Asignar</button>
+</form>
+
           </td>
         </tr>
       </tbody>
