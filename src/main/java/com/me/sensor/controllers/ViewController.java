@@ -34,7 +34,7 @@ public class ViewController {
         model.addAttribute("misiones", misionRepository.findAll());
         // Agregamos todos los robots para la asignación
         model.addAttribute("robotsAll", automataRepository.findAll());
-        return "misiones";
+        return "mision";
     }
 
    
