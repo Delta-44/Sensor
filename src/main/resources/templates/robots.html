@@ -3,102 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <title>Robots - Gestión</title>
+  <style>
+    :root {
+      --bg-color: #000;
+      --text-color: #f1f1f1;
+      --accent-color: #ff4d4d;
+      --hover-accent: #ff6666;
+      --form-bg: #121212;
+      --input-bg: #333;
+    }
+    
+    /* Estilos generales del body */
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    
+    /* Encabezados con acento */
+    h1, h2 {
+      color: var(--accent-color);
+      margin-bottom: 20px;
+    }
+    
+    /* Formularios: aplicamos fondo, padding, borde y redondeo */
+    form {
+      background-color: var(--form-bg);
+      padding: 15px;
+      border: 1px solid var(--accent-color);
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    /* Inputs, selects, textareas a 100% */
+    input, select, textarea {
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--accent-color);
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 3px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    /* Botones refinados: ancho automático, padding personalizado y transición */
+    button {
+      background-color: var(--accent-color);
+      border: none;
+      color: var(--text-color);
+      padding: 8px 12px;
+      margin: 5px 0;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: auto; /* Ahora el botón solo ocupa el ancho necesario */
+      box-sizing: border-box;
+    }
+    
+    button:hover {
+      background-color: var(--hover-accent);
+    }
+    
+    /* Clase para formularios que deben mostrarse en línea (sin ocupar 100% del ancho) */
+    form.inline {
+      display: inline;
+      margin: 0;
+    }
+    
+    /* Estilos para tablas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    table, th, td {
+      border: 1px solid var(--accent-color);
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #1a1a1a;
+      color: var(--accent-color);
+    }
+    
+    /* Alternar colores en filas para legibilidad */
+    tr:nth-child(odd) {
+      background-color: var(--bg-color);
+    }
+    
+    tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+    
+    /* Estilos para enlaces */
+    a {
+      color: var(--hover-accent);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<style>
-  /* Estilos generales del body */
-  body {
-    background-color: #000;
-    color: #f1f1f1;
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-
-  /* Encabezados con acento rojo */
-  h1, h2 {
-    color: #ff4d4d;
-    margin-bottom: 10px;
-  }
-
-  /* Estilos para formularios y inputs */
-  form {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ff4d4d;
-    border-radius: 5px;
-    background-color: #121212;
-  }
-
-  input, select, textarea, button {
-    background-color: #333;
-    color: #fff;
-    border: 1px solid #ff4d4d;
-    padding: 8px;
-    margin: 5px 0;
-    border-radius: 3px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Botones con estilo destacado */
-  button {
-    background-color: #b30000;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #ff4d4d;
-  }
-  
-  /* Estilos para tablas */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  table, th, td {
-    border: 1px solid #ff4d4d;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #1a1a1a;
-    color: #ff4d4d;
-  }
-  
-  /* Alterna colores en las filas para mayor legibilidad */
-  tr:nth-child(even) {
-    background-color: #1a1a1a;
-  }
-  
-  tr:nth-child(odd) {
-    background-color: #000;
-  }
-  
-  /* Enlaces con detalle en rojo */
-  a {
-    color: #ff6666;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-</style>
-
 <body>
   <h1>Gestión de Robots</h1>
 
   <!-- Formulario para crear un nuevo robot -->
   <h2>Añadir Nuevo Robot</h2>
   <form th:action="@{/robots}" method="post">
-    <input type="hidden" name="_method" value="PATCH"/>
     <label>Nombre:</label>
     <input type="text" name="nombre" required/><br/>
 
@@ -118,7 +139,6 @@
     <input type="number" name="nivel" required/><br/>
 
     <label>Habilidades:</label>
-    <!-- Se espera que el usuario ingrese habilidades separadas por coma -->
     <input type="text" name="habilidades" placeholder="ej. camuflaje, ataque láser"/><br/>
 
     <label>Estado:</label>
@@ -166,13 +186,13 @@
         </td>
         <td th:text="${robot.estado}"></td>
         <td>
-          <!-- Formulario para recargar energía -->
-          <form th:action="@{'/robots/' + ${robot.id} + '/recargar'}" method="post" style="display:inline;">
+          <!-- Formulario para recargar energía (en línea) -->
+          <form th:action="@{'/robots/' + ${robot.id} + '/recargar'}" method="post" class="inline">
             <input type="hidden" name="_method" value="PATCH"/>
             <button type="submit">Recargar</button>
           </form>
-          <!-- Formulario para subir nivel -->
-          <form th:action="@{'/robots/' + ${robot.id} + '/subir-nivel'}" method="post" style="display:inline;">
+          <!-- Formulario para subir nivel (en línea) -->
+          <form th:action="@{'/robots/' + ${robot.id} + '/subir-nivel'}" method="post" class="inline">
             <input type="hidden" name="_method" value="PATCH"/>
             <button type="submit">Subir Nivel</button>
           </form>
