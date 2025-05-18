@@ -29,7 +29,7 @@ public String viewMisiones(Model model) {
     model.addAttribute("robotsAll", automataRepository.findAll());
     return "misiones";
 }
-@GetMapping({"/", "/dashboard"})
+@GetMapping({"/dashboard"})
 public String dashboard(Model model) {
     model.addAttribute("misiones", misionRepository.findAll());
     model.addAttribute("robotsAll", automataRepository.findAll());
