@@ -16,6 +16,13 @@ public class ViewController {
     @Autowired
     private MisionRepository misionRepository;
 
+     @GetMapping("/vent")
+    public String dashboard(Model model) {
+        model.addAttribute("misiones", misionRepository.findAll());
+        model.addAttribute("robotsAll", automataRepository.findAll());
+        return "vent"; // Se buscará el archivo dashboard.html en resources/templates
+    }
+
     @GetMapping("/view/robots")
     public String viewRobots(Model model) {
         model.addAttribute("robots", automataRepository.findAll());
@@ -30,11 +37,6 @@ public class ViewController {
         return "misiones";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        model.addAttribute("misiones", misionRepository.findAll());
-        model.addAttribute("robotsAll", automataRepository.findAll());
-        return "dashboard"; // Se buscará el archivo dashboard.html en resources/templates
-    }
+   
 
 }
