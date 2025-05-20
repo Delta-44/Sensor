@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Asignaciones</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #f1f1f1;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #ff4d4d;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ff4d4d;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #1a1a1a;
+            color: #ff4d4d;
+        }
+        tr:nth-child(odd) {
+            background-color: #000;
+        }
+        tr:nth-child(even) {
+            background-color: #1a1a1a;
+        }
+        a {
+            color: #ff6666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Listado de Asignaciones</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Misión</th>
+                <th>Robot</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="asignacion : ${asignaciones}">
+                <td th:text="${asignacion.id}"></td>
+                <td th:text="${asignacion.mision.nombre}"></td>
+                <td th:text="${asignacion.automata.nombre}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <a th:href="@{/asignaciones/crear}">Crear nueva asignación</a>
+    </p>
+</body>
+</html>

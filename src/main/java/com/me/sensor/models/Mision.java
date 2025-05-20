@@ -23,13 +23,7 @@ public class Mision {
     
     // Recompensa en puntos o monedas
     private int recompensa;
-    
-    @ManyToMany
-    @JoinTable(name = "automata_mision",
-            joinColumns = @JoinColumn(name = "mision_id"),
-            inverseJoinColumns = @JoinColumn(name = "automata_id"))
-    private Set<Automata> robotsParticipantes = new HashSet<>();
-    
+
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     
