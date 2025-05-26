@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Batalla de Superhéroes</title>
+</head>
+<body>
+    <h1>Batalla 3 vs 3</h1>
+    <div>
+        <h2>Equipo A</h2>
+        <ul>
+            <li th:each="hero : ${teamA}">
+                <img th:src="${hero.image}" width="100px">
+                <p th:text="${hero.name}"></p>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>Equipo B</h2>
+        <ul>
+            <li th:each="hero : ${teamB}">
+                <img th:src="${hero.image}" width="100px">
+                <p th:text="${hero.name}"></p>
+            </li>
+        </ul>
+    </div>
+
+    <h2 th:text="${winner}"></h2>
+</body>
+</html>
