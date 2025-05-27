@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>batalla</title>
+
+    <style>
+
+    /* General reset y estilos globales */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, #1f1f1f, #2f2f2f);
+  color: #eee;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Estilo para títulos */
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Contenedor de cada equipo */
+.team {
+  background-color: #333;
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+}
+
+/* Estilos para la tabla que muestra los héroes */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: auto;
+}
+
+th, td {
+  border: 1px solid #555;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #444;
+  font-size: 1.1em;
+}
+
+td {
+  background-color: #3a3a3a;
+}
+
+/* Estilo para las imágenes de los héroes */
+img {
+  width: 100px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+}
+
+/* Estilo para el mensaje del resultado (winner) */
+#winner, .winner {
+  background: #ff4500;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin: 20px auto;
+  width: fit-content;
+  text-align: center;
+  font-size: 1.4em;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+    </style>
+</head>
+<body>
+    <h1>Batalla de Superhéroes 3 vs 3</h1>
+    
+    <h2 th:text="${winner}">Resultado</h2>
+    
+    <div class="team">
+        <h3>Equipo A</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nivel de Poder</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hero : ${teamA}">
+                    <td th:text="${hero.name}"></td>
+                    <td th:text="${hero.powerstats['power']}"></td>
+                    <td><img th:src="${hero.image}" alt="[[${hero.name}]]"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="team">
+        <h3>Equipo B</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nivel de Poder</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hero : ${teamB}">
+                    <td th:text="${hero.name}"></td>
+                    <td th:text="${hero.powerstats['power']}"></td>
+                    <td><img th:src="${hero.image}" alt="[[${hero.name}]]"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
